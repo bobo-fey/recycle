@@ -1,0 +1,265 @@
+{
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationStyle": "custom",
+				"backgroundColor": "#FFD426"
+				
+			}
+		}
+		,{
+			"path": "pages/guidePage/guidePage",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}
+		, {
+			"path": "pages/recovery/recovery",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/user/user",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/public/login",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/public/bandPhoneNumber",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/cart/cart",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/createdOrder/chooseType",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/createdOrder/usage",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/createdOrder/appointment",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/createdOrder/appointSuccess",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/order/order",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/order/orderDetail",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/order/cancelOrder",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/order/comment",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userInfo/userInfo",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userInfo/editNickname",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userInfo/authentication",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/userInfo/editPhonenumber",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/setting/setting",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/address/address",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/address/addressEdit",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/article_page/agreement",
+			"style": {
+				// "navigationStyle": "custom",
+				"navigationBarTitleText": "用户协议",
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/article_page/privacy",
+			"style": {
+				// "navigationStyle": "custom",
+				"navigationBarTitleText": "隐私政策",
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/article_page/aboutUs",
+			"style": {
+				// "navigationStyle": "custom",
+				"navigationBarTitleText": "关于我们",
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"enablePullDownRefresh": false
+			}
+
+		}
+        ,{
+            "path" : "pages/article_page/serviceNotice",
+            "style" :                                                                                    
+            {
+				// "navigationStyle": "custom",
+                "navigationBarTitleText": "回收服务协议",
+				"navigationBarBackgroundColor":"#FFFFFF",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/article_page/knownMore",
+            "style" :                                                                                    
+            {
+				// "navigationStyle": "custom",
+                "navigationBarTitleText": "回收指南",
+				"navigationBarBackgroundColor":"#FFFFFF",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/areaPicker/areaPicker",
+            "style" :                                                                                    
+            {
+				"navigationStyle": "custom",
+				//"navigationBarTitleText": "选择",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/cancellation/cancellation",
+            "style" :                                                                                    
+            {
+               "navigationStyle": "custom",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"tabBar": {
+		//底部导航栏配置
+		"color": "#3D3D3D",
+		"selectedColor": "#3D3D3D",
+		"borderStyle": "black",
+		"backgroundColor": "#FFFFFF",
+		//tabBar项目列表
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/home.png",
+				"selectedIconPath": "static/home_selected.png"
+			},
+			{
+				"pagePath": "pages/recovery/recovery",
+				"text": "回收点",
+				"iconPath": "static/recovery.png",
+				"selectedIconPath": "static/recovery_selected.png"
+			},
+			{
+				"pagePath": "pages/user/user",
+				"text": "我的",
+				"iconPath": "static/user.png",
+				"selectedIconPath": "static/user_selected.png"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "回收猿",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	}
+}

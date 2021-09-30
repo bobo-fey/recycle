@@ -1,0 +1,9 @@
+{
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-switch": "/node-modules/uview-ui/components/u-switch/u-switch",
+    "u-modal": "/node-modules/uview-ui/components/u-modal/u-modal",
+    "u-select": "/node-modules/uview-ui/components/u-select/u-select"
+  }
+}

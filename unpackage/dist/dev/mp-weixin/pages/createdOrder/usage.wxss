@@ -1,0 +1,215 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* uni.scss */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.content.data-v-14715bd1 {
+  width: 100vw;
+  overflow: hidden;
+  padding: 0 32rpx;
+}
+.back-btn.data-v-14715bd1 {
+  position: absolute;
+  top: 32rpx;
+  left: 48rpx;
+  width: 50rpx;
+  height: 50rpx;
+}
+.back-btn image.data-v-14715bd1 {
+  width: 100%;
+  height: 100%;
+}
+.usage-view.data-v-14715bd1 {
+  font-family: PingFangSC-Semibold;
+  font-size: 48rpx;
+  color: #3D3D3D;
+  font-weight: 600;
+  margin-top: 168rpx;
+  margin-bottom: 72rpx;
+}
+.parameter-view.data-v-14715bd1 {
+  width: 100%;
+  padding-bottom: 100rpx;
+}
+.parameter-view .parameter-item.data-v-14715bd1 {
+  margin-bottom: 40rpx;
+}
+.parameter-view .parameter-item .parameter-name.data-v-14715bd1 {
+  font-size: 28rpx;
+  color: #3D3D3D;
+  font-weight: bold;
+  margin-bottom: 32rpx;
+}
+.parameter-view .parameter-item .parameter-child.data-v-14715bd1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+          flex-wrap: wrap;
+}
+.parameter-view .parameter-item .parameter-child .child-item.data-v-14715bd1 {
+  height: 64rpx;
+  white-space: nowrap;
+  padding: 14rpx 12rpx;
+  border: 2rpx solid #cfcfcf;
+  border-radius: 4rpx;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  margin-right: 14rpx;
+  margin-bottom: 24rpx;
+}
+.parameter-view .parameter-item .parameter-child .active.data-v-14715bd1 {
+  color: #F7A300;
+  border: 1rpx solid #F7A300 !important;
+}
+.next-btn.data-v-14715bd1 {
+  width: 100vw;
+  height: 98rpx;
+  background: #FFD426;
+  font-size: 32rpx;
+  color: #3D3D3D;
+  font-weight: bold;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+.next-btn .next-text.data-v-14715bd1 {
+  font-size: 32rpx;
+  color: #3D3D3D;
+  font-weight: bold;
+}
+.next-btn .keep-view.data-v-14715bd1 {
+  height: 98rpx;
+  position: fixed;
+  bottom: 0rpx;
+  right: 40rpx;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+}
+.next-btn .keep-view .cart_img.data-v-14715bd1 {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 8rpx;
+}
+.next-btn .keep-view .cart_img image.data-v-14715bd1 {
+  width: 100%;
+  height: 100%;
+}
+.next-btn .keep-view .kepp-text.data-v-14715bd1 {
+  font-size: 28rpx;
+  color: #3D3D3D;
+  font-weight: 500;
+}
+.guide.data-v-14715bd1 {
+  position: fixed;
+  top: 200rpx;
+  left: 200rpx;
+  right: 0;
+  bottom: 0px;
+  z-index: 1000;
+}
+.guide .skip.data-v-14715bd1 {
+  width: 120rpx;
+  height: 60rpx;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  border-radius: 30rpx;
+  background-color: #666;
+  color: #FFFFFF;
+  font-size: 34rpx;
+  font-weight: 700;
+  position: absolute;
+  top: -100rpx;
+  right: 40rpx;
+  z-index: 110;
+}
+.guide .guide-box.data-v-14715bd1 {
+  position: fixed;
+  z-index: 100;
+  border-radius: 10rpx;
+}
+.guide .guide-box .arrow.data-v-14715bd1 {
+  height: 40rpx;
+  width: 0rpx;
+  background: #F7A300;
+  position: absolute;
+  top: 144rpx;
+  left: 50%;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+.guide .guide-box .tips.data-v-14715bd1 {
+  background: #F7A300;
+  -webkit-box-shadow: 0px 2px 9px 0px rgba(0, 0, 0, 0.1);
+          box-shadow: 0px 2px 9px 0px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  position: absolute;
+  top: 270rpx;
+  left: -50%;
+  padding: 15rpx 20rpx;
+  font-size: 30rpx;
+  border-radius: 12rpx;
+}
+.guide .guide-box .tips .text.data-v-14715bd1 {
+  white-space: nowrap;
+}
+.guide .guide-box .tips .next.data-v-14715bd1 {
+  text-align: right;
+  padding-right: 0rpx;
+  margin-top: 10rpx;
+  font-size: 32rpx;
+}
+

@@ -1,0 +1,7 @@
+{
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-select": "/node-modules/uview-ui/components/u-select/u-select"
+  }
+}

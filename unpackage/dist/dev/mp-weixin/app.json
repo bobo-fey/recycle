@@ -1,0 +1,67 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/guidePage/guidePage",
+    "pages/recovery/recovery",
+    "pages/user/user",
+    "pages/public/login",
+    "pages/public/bandPhoneNumber",
+    "pages/cart/cart",
+    "pages/createdOrder/chooseType",
+    "pages/createdOrder/usage",
+    "pages/createdOrder/appointment",
+    "pages/createdOrder/appointSuccess",
+    "pages/order/order",
+    "pages/order/orderDetail",
+    "pages/order/cancelOrder",
+    "pages/order/comment",
+    "pages/userInfo/userInfo",
+    "pages/userInfo/editNickname",
+    "pages/userInfo/authentication",
+    "pages/userInfo/editPhonenumber",
+    "pages/setting/setting",
+    "pages/address/address",
+    "pages/address/addressEdit",
+    "pages/article_page/agreement",
+    "pages/article_page/privacy",
+    "pages/article_page/aboutUs",
+    "pages/article_page/serviceNotice",
+    "pages/article_page/knownMore",
+    "pages/areaPicker/areaPicker",
+    "pages/cancellation/cancellation"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "回收猿",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#3D3D3D",
+    "selectedColor": "#3D3D3D",
+    "borderStyle": "black",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/home.png",
+        "selectedIconPath": "static/home_selected.png"
+      },
+      {
+        "pagePath": "pages/recovery/recovery",
+        "text": "回收点",
+        "iconPath": "static/recovery.png",
+        "selectedIconPath": "static/recovery_selected.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的",
+        "iconPath": "static/user.png",
+        "selectedIconPath": "static/user_selected.png"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

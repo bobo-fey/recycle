@@ -1,0 +1,658 @@
+<template>
+	<div class="container">
+		<div class="empty-view"></div>
+		<div class="top_header">
+			<div class="adress_position" @click="selectAddress">
+				<image class="position_icon" src="../../static/dinwei.png" mode="aspectFill"></image>
+				<text class="adress_text">{{district}}</text>
+			</div>
+			<div class="btn-view">
+				<div class="recover-btn" @click="navTo('/pages/createdOrder/chooseType')">
+					<text class="booking">预约回收</text>
+				</div>
+				<div class="cart_img" @click="toCart('/pages/cart/cart')">
+					<image class="cart_icon" src="../../static/huishouche.png" mode="aspectFill"></image>
+					<text class="red_number" v-if="cartNumber > 0">{{cartNumber}}</text>
+				</div>
+			</div>
+		</div>
+		<div class="mian">
+			<div class="map_view">
+				<map class="gmap" id="gmap" ref="gmap" show-location :latitude="latitude"
+					:longitude="longitude" :markers="markers" @markertap="markerTap"></map>
+			</div>
+		</div>
+		<div class="address_detail" :class="loading === true ? 'aj':''">
+			<div class="loading-view" v-if="loading">
+				<image class="loading-img" src="../../static/loading.gif" mode="aspectFill"></image>
+				<text class="loading-text">加载中...</text>
+			</div>
+			<div class="company_container" v-else>
+				<div class="data-view" v-if="hasData">
+					<div class="company_view">
+						<div class="company_detail">
+							<text class="company_name">{{siteData.shop_name}}</text>
+							<text class="company_address">{{siteData.address}}</text>
+						</div>
+						<div class="distance">
+							<div class="tips_box">
+							<!-- <text class="distance_tips">距离</text> -->
+							<!-- <text class="nearest">(最近)</text> -->
+							</div>
+							<!-- <text class="distance_number">{{siteData.distance > 1 ? `${siteData.distance.toFixed(1)}KM`: `${siteData.distance.toFixed(3)*1000}M`}}</text> -->
+							<text> </text>
+						</div>
+					</div>
+					<div class="category">
+						<div class="category_item" v-for="(item,index) in siteData.order_take" :key="index">
+							<text class="category_text">{{item}}</text>
+						</div>
+					</div>
+				</div>
+				<div class="no-data" v-else>
+					<text class="tips-text">附近没有回收点，您可以预约上门回收</text>
+				</div>
+				<!-- <div class="subscribe_btn">
+					<text class="subscribe_text">预约回收</text>
+				</div> -->
+			</div>
+		</div>
+		<div class="re-point" @click="getMyLocation">
+			<image class="point-img" src="../../static/map/recovery.png" mode="aspectFill"></image>
+		</div>
+	</div>
+
+</template>
+
+<script>
+	import zsRequest from '@/common/request.js'
+	export default {
+		data() {
+			return {
+				cartNumber: 0,
+				isShowLocation: true, //是否显示当前定位点
+				address: '',
+				district: '霞山区',
+				loading: false,
+				hasData: true,
+				latitude: 21.229074, //纬度
+				longitude: 110.399322, //经度
+				mylatitude :21.229074,
+				mylongitude:110.399322,
+				markers: [],
+				area_marker:{}, //区域图标
+				siteData: {}, //站点详情
+				orange_location: '../../static/map/orange_location.png', //点击的图标
+				bule_location: '../../static/map/bule_location.png', //站点默认图标
+				red_location:'../../static/map/red_location.png',//手动标记点图标
+				tapsite:null,  //点击同一个站点是用于阻止重新请求的标识
+				mylocation:[],//我的定位图标
+				siteArray:[], //站点列表
+				AreaArray:[], //组合数组
+				first_time:true,//控制只需要合并我的定位和站点图标数组的标识
+			}
+		},
+		onLoad() {
+			this.loading = true
+		},
+		onShow() {
+			this.AreaArray = []
+			let pickerPosition = uni.getStorageSync('pickerPosition')
+			if (pickerPosition) { //有手动选择定位
+				this.latitude = parseFloat(pickerPosition.latitude) //中心经度
+				this.longitude = parseFloat(pickerPosition.longitude) //中心纬度
+				this.district = pickerPosition.area
+			}
+			this.getBusineesLocations(this.latitude, this.longitude) //获取站点列表
+			if (uni.getStorageSync('isLogin')) {
+				this.getCartNumber() //回收车数目
+			}
+		},
+		methods: {
+			// getuserPosition(){
+			// 	let _this = this
+			// 	uni.getLocation({ //APP定位
+			// 		type: 'gcj02',
+			// 		geocode: true, //设置该参数为true可直接获取经纬度及城市信息，h5不支持解析地址信息
+			// 		success: function(res) {
+			// 			console.log(res)
+			// 			_this.mylatitude = res.latitude
+			// 			_this.mylongitude = res.longitude
+			// 			_this.district = res.address.district
+			// 			let temp = {
+			// 				city:res.address.city,
+			// 				area:res.address.district,
+			// 				latitude: res.latitude,
+			// 				longitude: res.longitude
+			// 			}
+			// 			uni.setStorageSync('positionStorage', temp)
+			// 		},
+			// 		fail: function(e) {
+			// 			_this.district = '获取定位失败'
+			// 		}
+			// 	});
+			// },
+			getBusineesLocations(lat,lng) { //获取站点经纬度列表
+				zsRequest.request('/web/users/recovery-classify', {
+						action: 'coordinate',
+						mode: 'getBusinessInfo',
+						user: 'common',
+						latitude: lat,
+						longitude: lng,
+					}, 'POST')
+					.then((res) => {
+						// console.log(res);
+						if (res.code === 200) {
+							if (res.data.code == 0) {
+								// console.log(res.data.userBs,'获取站点列表成功');
+								let that = this
+								that.siteArray = res.data.userBs
+								that.siteArray.map((item, index) => {
+									item.iconPath = that.bule_location //显示的图标
+									item.rotate = 0 // 旋转度数
+									item.width = 32 //宽
+									item.height = 32 //高
+									// item.title = item.shop_name //标注点名
+									item.alpha = 1 //透明度
+									item.callout = { //自定义标记点上方的气泡窗口 点击有效
+										content: item.shop_name, //文本
+										color: '#F7A300', //文字颜色
+										fontSize:14 , //文本大小
+										padding:10,
+										borderRadius: 2, //边框圆角
+										bgColor: '#f5f5f5', //背景颜色
+										display: 'BYCLICK', //常显
+									}
+								})
+								
+								
+								//找出距离最近的站点
+								let d_list = []
+								that.siteArray.map((item)=>{
+									d_list.push(item.distance)
+								})
+								// console.log(d_list)
+								let shortdistance = d_list[0]
+								for(let i = 0; i< d_list.length;i++){
+									if(d_list[i] < shortdistance){
+										shortdistance =  d_list[i]
+									}
+								}
+								// console.log(shortdistance);
+								let siteId = null
+								that.siteArray.map(item=>{
+									if(item.distance == shortdistance){
+										siteId = item.id
+									}
+								})
+								// console.log(siteId);
+								that.tapsite = siteId //标记为当前点击的站点
+								that.getSiteDetail(siteId)
+								//根据id设置最近站点标记icon为橙色
+								that.siteArray.map((item, index) => { 
+									if (item.id == siteId) {
+										item.iconPath = that.orange_location 
+										item.isShortdistance = true  //标识这是距离最近的站点
+									}else{
+										item.isShortdistance = false
+									}
+								})
+								that.markers = that.siteArray
+							}
+							else{
+								uni.showToast({
+									icon:'none',
+									title:'数据载入失败，请稍后重试'
+								})
+								that.loading = false //隐藏加载动画
+								that.hasData = false
+							}
+						}
+						else{
+							uni.showToast({
+								icon:'none',
+								title:'数据载入失败，请稍后重试'
+							})
+							that.loading = false //隐藏加载动画
+							that.hasData = false
+						}
+					})
+			},
+			
+			getMyLocation() { //恢复我的定位
+				if(uni.getStorageSync('positionStorage')){
+					this.latitude = uni.getStorageSync('positionStorage').latitude
+					this.longitude = uni.getStorageSync('positionStorage').longitude
+					this.$refs.gmap.moveToLocation();
+					this.getBusineesLocations(this.mylatitude, this.mylongitude)
+					uni.hideLoading()
+				}else{
+					let _this = this
+					uni.showLoading()
+					uni.getLocation({ //APP定位
+						type: 'gcj02',
+						geocode: true, //设置该参数为true可直接获取经纬度及城市信息，h5不支持解析地址信息
+						success: function(res) {
+							console.log(res)
+							uni.hideLoading()
+							this.showlocation =true
+							let temp = {
+								city:res.address.city,
+								area:res.address.district,
+								latitude: res.latitude,
+								longitude : res.longitude
+							}
+							uni.setStorageSync('positionStorage', temp)
+							this.mylatitude = res.latitude
+							this.mylongitude = res.longitude
+							this.latitude = res.latitude
+							this.longitude = res.longitude
+							this.$refs.gmap.moveToLocation(); 
+						},
+						fail: function(e) {
+							console.log(e);
+							uni.showToast({
+								icon:'none',
+								title:'获取定位失败，请授权并重新获取手机定位'
+							})
+						}
+					});
+				}
+			},
+			getCartNumber() { //获取回收车红点
+				zsRequest.request('/web/users/recovery-classify', {
+						mode: "getOrderRecyclingCart",
+						n: uni.getStorageSync('n'),
+						user: "common",
+						phone_key: uni.getStorageSync('clientId'),
+					}, 'POST')
+					.then((res) => {
+						console.log(res);
+						this.cartNumber = res.data.recycling_cart.length
+					})
+			},
+			selectAddress() { //显示选择器
+				uni.navigateTo({
+					url:'/pages/areaPicker/areaPicker'
+				})
+			},
+			markerTap(e){
+				console.log(this.siteArray);
+				console.log(e);
+				console.log(e.detail.markerId);
+				if(e.detail.markerId == this.tapsite){  //点击同一个标记不让请求第二次
+					return;
+				}else{
+					this.tapsite = e.detail.markerId
+				}
+				if(e.detail.markerId === 0 || e.detail.markerId == 9999888877){return;} 
+				this.loading = true //显示加载动画
+				let markerId = e.detail.markerId
+				console.log(markerId);
+				console.log(this.markers);
+				this.getSiteDetail(markerId)//获取标记点详情
+			},
+			getSiteDetail(markerId) {
+				zsRequest.request('/web/users/recovery-classify', {
+						mode: 'getBusinessInfo',
+						user: 'common',
+						action: 'info',
+						id: markerId,
+						latitude: this.latitude,
+						longitude: this.longitude,
+					}, 'POST')
+					.then((res) => {
+						console.log(res);
+						let that = this
+						if (res.code == 200) {
+							if (res.data.code == 0) {
+								that.hasData = true
+								setTimeout(() => {
+									that.loading = false //隐藏加载动画
+								}, 400)
+								that.siteData = res.data.userBs
+							}else{
+								uni.showToast({
+									icon:'none',
+									title:'数据载入失败，请稍后重试'
+								})
+								that.loading = false //隐藏加载动画
+								that.hasData = false
+							}
+						}else{
+							uni.showToast({
+								icon:'none',
+								title:'数据载入失败，请稍后重试'
+							})
+							that.loading = false //隐藏加载动画
+							that.hasData = false
+						}
+					})
+			},
+			toCart(url) {
+				if (uni.getStorageSync('isLogin')) {
+					uni.navigateTo({
+						url: url
+					})
+				} else {
+					uni.navigateTo({
+						url: '/pages/public/login'
+					})
+				}
+			},
+			navTo(url){
+				uni.navigateTo({
+					url: url
+				})
+			}
+		}
+	}
+</script>
+
+<style>
+	.container {
+		width: 750rpx;
+		/* #ifndef APP-PLUS-NVUE */
+		display: flex;
+		/* #endif*/
+		flex: 1;
+	}
+
+	.empty-view {
+		width: 750rpx;
+		height: 60rpx;
+		background-color: #fff;
+	}
+
+	.top_header {
+		width: 750rpx;
+		height: 88rpx;
+		background-color: #fff;
+		/* #ifndef APP-PLUS-NVUE */
+		display: flex;
+		/* #endif*/
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		padding-left: 32rpx;
+		padding-right: 32rpx;
+	}
+
+	.adress_position {
+		/* #ifndef APP-PLUS-NVUE */
+		display: flex;
+		/* #endif*/
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		height: 60rpx;
+
+	}
+
+	.position_icon {
+		width: 32rpx;
+		height: 32rpx;
+		margin-right: 8rpx;
+	}
+
+	.adress_text {
+		font-size: 26rpx;
+		color: #3D3D3D;
+		font-weight: 400;
+	}
+
+	.btn-view {
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.recover-btn {
+		padding-left: 20rpx;
+		padding-right: 20rpx;
+		padding-top: 12rpx;
+		padding-bottom: 12rpx;
+		margin-right: 20rpx;
+		border-radius: 30rpx;
+		background-color: #fed53b;
+	}
+
+	.booking {
+		font-size: 28rpx;
+	}
+
+	.cart_img {
+		position: relative;
+		width: 50rpx;
+		height: 50rpx;
+		margin-right: 20rpx;
+		/* #ifndef APP-PLUS-NVUE */
+		display: flex;
+		/* #endif*/
+		align-items: center;
+		justify-content: center;
+	}
+
+	.cart_icon {
+		width: 40rpx;
+		height: 40rpx;
+	}
+
+	.red_number {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 30rpx;
+		height: 30rpx;
+		line-height: 30rpx;
+		font-size: 24rpx;
+		border-radius: 24rpx;
+		text-align: center;
+		color: #FFFFFF;
+		background: #F76675;
+	}
+
+	.mian {
+		position: relative;
+		width: 750rpx;
+		/* #ifndef APP-PLUS-NVUE */
+		display: flex;
+		/* #endif*/
+		flex: 1;
+		/* height: 14000rpx; */
+	}
+
+	.map_view {
+		width: 750rpx;
+		/* #ifndef APP-PLUS-NVUE */
+		display: flex;
+		/* #endif*/
+		flex: 1;
+		/* height: 1400rpx; */
+	}
+
+	.gmap {
+		width: 750rpx;
+		/* #ifndef APP-PLUS-NVUE */
+		display: flex;
+		/* #endif*/
+		flex: 1;
+		/* height: 1400rpx; */
+	}
+
+	.address_detail {
+		width: 718rpx;
+		height: 200rpx;
+		background: #FFFFFF;
+		border-radius: 24rpx;
+		position: absolute;
+		bottom: 30rpx;
+		left: 16rpx;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.aj {
+		align-items: center;
+		justify-content: center;
+	}
+
+	.loading-view {
+		/* width: 200rpx;
+		height: 40rpx; */
+		/* #ifndef APP-PLUS-NVUE */
+		display: flex;
+		/* #endif*/
+		flex-direction: row;
+		align-items: center;
+		padding-top: 80rpx;
+		padding-bottom: 80rpx;
+	}
+
+	.loading-img {
+		width: 40rpx;
+		height: 40rpx;
+	}
+
+	.loading-text {
+		font-size: 30rpx;
+		color: #909399;
+	}
+
+	.company_view {
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.company_detail {
+		width:450rpx;
+		margin-top: 36rpx;
+		margin-left: 32rpx;
+	}
+
+	.company_name {
+		font-size: 32rpx;
+		color: #3D3D3D;
+		font-weight: 600;
+		margin-bottom: 8rpx;
+	}
+
+	.company_address {
+		font-size: 24rpx;
+		color: #757575;
+		font-weight: 400;
+	}
+
+	.distance {
+		margin-top: 36rpx;
+		margin-right: 32rpx;
+		text-align: left;
+	}
+	.tips_box{
+		display: flex;
+		flex-direction: row;
+	}
+
+	.distance_tips {
+		font-size: 20rpx;
+		color: #F7A300;
+		font-weight: 400;
+		margin-right: 10rpx
+	}
+	.nearest{
+		font-size: 20rpx;
+		color: #F7A300;
+		font-weight: 400;
+	}
+	.distance_number {
+		font-size: 32rpx;
+		color: #F7A300;
+		font-weight: 500;
+	}
+
+	.category {
+		width: 654rpx;
+		height: 40rpx;
+		margin-top: 16rpx;
+		margin-left: 32rpx;
+		flex-direction: row;
+		margin-bottom: 48rpx;
+	}
+
+	.category_item {
+		border-color: #999999;
+		border-width: 2rpx;
+		border-style: solid;
+		/* #ifndef APP-PLUS-NVUE */
+		display: flex;
+		/* #endif*/
+		align-items: center;
+		justify-content: center;
+		margin-right: 20rpx;
+		padding-left: 6rpx;
+		padding-right: 6rpx;
+		border-radius: 4rpx;
+
+	}
+
+	.category_text {
+		font-size: 24rpx;
+		color: #999999;
+	}
+
+	.subscribe_btn {
+		width: 654rpx;
+		height: 80rpx;
+		background-color: #FFD426;
+		border-radius: 44rpx;
+		margin-left: 32rpx;
+		align-items: center;
+		justify-content: center;
+
+	}
+
+	.no-data {
+		margin-top: 40rpx;
+		margin-bottom: 40rpx;
+	}
+
+	.tips-text {
+		margin-top: 40rpx;
+		margin-bottom: 40rpx;
+		font-size: 30rpx;
+		text-align: center;
+	}
+
+	.subscribe_text {
+		font-size: 32rpx;
+		color: #3D3D3D;
+		font-weight: 900;
+	}
+
+	.picker-view {
+		position: fixed;
+		left: 0rpx;
+		bottom: 0rpx;
+		width: 750rpx;
+		height: 400rpx;
+	}
+
+	.re-point {
+		width: 72rpx;
+		height: 72rpx;
+		background-color: #FFFFFF;
+		border-radius: 72rpx;
+		position: fixed;
+		right: 20rpx;
+		bottom: 280rpx;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.point-img {
+		width: 48rpx;
+		height: 48rpx;
+		border-radius: 48rpx;
+	}
+</style>
